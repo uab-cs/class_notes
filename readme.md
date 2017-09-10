@@ -1,5 +1,5 @@
 # class_notes
-[![Gem Version](https://badge.fury.io/rb/class_notes.svg)](https://badge.fury.io/rb/class_notes)
+[![Gem Version](https://d25lcipzij17d.cloudfront.net/badge.svg?id=rb&type=6&v=1.0.1&x2=0)](https://rubygems.org/gems/class_notes)
 
 make your classes take notes
 
