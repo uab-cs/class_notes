@@ -2,7 +2,7 @@ require_relative 'class_notes/note'
 require_relative 'class_notes/notebook'
 
 module ClassNotes
-  ::Version = [1, 0, 0]
+  ::Version = [1, 0, 1]
 
   ## @brief create a new note taker Proc on parent
   ## @param parent the parent note
