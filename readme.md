@@ -1,4 +1,6 @@
 # class_notes
+[![Gem Version](https://badge.fury.io/rb/class_notes.svg)](https://badge.fury.io/rb/class_notes)
+
 make your classes take notes
 
 ## install:
