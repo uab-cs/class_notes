@@ -35,3 +35,5 @@ puts notebook.notes # =>
 #    {:args=>{:a=>"1", :b=>"2", :c=>"3", :d=>"4"}, :result=>10}
 #  {}
 ```
+## docs:
+http://www.rubydoc.info/gems/class_notes
