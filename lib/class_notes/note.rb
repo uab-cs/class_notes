@@ -3,7 +3,8 @@ module ClassNotes
   ## @brief      Class for a single step.
   ##
   class Note
-    attr_accessor :title, :data, :children
+    attr_accessor :title, :children
+    attr_reader :args, :results
 
     ##
     ## @brief      makes a new note
@@ -13,10 +14,39 @@ module ClassNotes
     ##
     ## @return     a new note object
     ##
-    def initialize(title:, data:)
-      @children = []
+    def initialize(title:, args:nil, results:nil)
       @title    = title
-      @data     = data
+      self.args=(args) if args
+      self.results=(results) if results
+
+      @children = []
+    end
+
+    def args=(args)
+      @args =
+        if args.length == 1 and args.first.class == Hash
+          normalize(args.first)
+        else
+          normalize(args)
+        end
+    end
+
+    def results=(data)
+      @results=normalize(data)
+    end
+
+    def normalize(data)
+      case data
+      when Hash
+        data.map { |t, v| [t, v.to_s]}.to_h
+      when Array
+        i = -1
+        data.map { |e|
+          [ i+=1 , e.to_s]
+        }.to_h
+      else
+        {0 => "#{data}"}
+      end
     end
 
     ##
@@ -47,16 +77,30 @@ module ClassNotes
       @children.last
     end
 
+    def h_to_s(hash, pre)
+      hash.map { |i, a| pre + "#{i}: #{a}" }.join("\n")
+    end
+
+    def tab(i)
+      "  " * i
+    end
+
     ## @brief render the note as a string
     ## @param indent the indent level of the base string
     ## @return String
-    def to_s(indent=0)
+    def to_s(i=0)
       [
-        "#{"  " * indent}#{title}",
-        unless children.empty?
-          children.map { |child| child.to_s(indent+1) }.join("\n")
+        tab(i) + "#{title}:",
+        if args and not args.empty?
+          tab(i+1) + "args:\n" + h_to_s(args, tab(i+2))
         end,
-        "#{"  " * (indent+1)}#{data}"
+        unless children.empty?
+          tab(i+1) + "children:\n" +
+          children.map { |child| child.to_s(i+2) }.join("\n")
+        end,
+        if results
+          tab(i+1) + "results:\n" + h_to_s(results, tab(i+2))
+        end
       ].compact.join("\n")
     end
 
@@ -65,8 +109,9 @@ module ClassNotes
     def to_h
       {
         title: title,
+        args: args,
         children: children.empty? ? nil : children.map { |child| child.to_h },
-        data: data
+        results: results
       }.compact
     end
   end

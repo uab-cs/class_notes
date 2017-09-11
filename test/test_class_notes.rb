@@ -26,7 +26,11 @@ class TestClassNotes < Test::Unit::TestCase
     @notebook.add_4(a: 1, b: 2, c: 3, d: 4)
     notes = @notebook.notes
     assert_equal notes.title, "SimpleMathNotebook"
-    assert_equal notes.to_h[:children].first[:children][2][:children].first[:data][:args][1], 7
+  end
+
+  def test_recursion
+    @notebook.recurse
+    puts @notebook.notes
   end
 
 end

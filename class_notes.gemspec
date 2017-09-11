@@ -3,7 +3,7 @@ require_relative 'lib/class_notes'
 
 Gem::Specification.new do |s|
   s.name        = 'class_notes'
-  s.version     = Version.join(".")
+  s.version     = ClassNotes::Version.join(".")
   s.date        = Date.today.strftime('%Y-%m-%d')
   s.summary     = "make your classes take notes"
   s.description = "wrap a classes instance methods in logic that keeps track of their actions"

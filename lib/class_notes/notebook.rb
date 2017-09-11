@@ -1,6 +1,6 @@
 module ClassNotes
   module Notebook
-    ::WrappedSuffix = "Notebook"
+    self::WrappedSuffix = "Notebook"
 
     ## @brief wrap a class in notes
     ## @param klass the class
@@ -11,15 +11,15 @@ module ClassNotes
 
         attr_reader :notes, :add_note
 
-        def initialize
-          @notes    = ClassNotes::Note.new(title: self.class.to_s, data: {})
+        def initialize(*args, &block)
+          @notes    = ClassNotes::Note.new(title: self.class.to_s)
           @add_note = ClassNotes.note_taker(notes)
           wrap_methods(*self.class.superclass.instance_methods(false))
+          super(*args, &block)
         end
       }
 
-
-      notebook_name = "#{klass.to_s}#{::WrappedSuffix}"
+      notebook_name = "#{klass.name.split("::").last}#{Notebook::WrappedSuffix}"
       Object.const_set notebook_name, notebook
 
       notebook
@@ -32,25 +32,16 @@ module ClassNotes
       meths.each { |meth|
         m = method(meth)
         define_singleton_method(meth) { |*args, &block|
-
           parent    = add_note
-          child     = add_note.({title: meth.to_s, data: {}})
+          child     = add_note.({title: meth.to_s, args: args})
           @add_note = ClassNotes.note_taker(child)
 
-          result    = super(*args, &block)
+          results   = super(*args, &block)
           @add_note = parent
 
-          pretty_args =
-            case args.first
-            when Hash
-              args.first.map { |t, v| [t, v.to_s]}.to_h
-            else
-              args
-            end
+          child.results = results
 
-          child.data = {args: pretty_args, result: result}
-
-          result
+          results
         }
       }
     end
